@@ -1,0 +1,29 @@
+services:
+  api:
+    build: .
+    image: freeze-thaw-api:latest
+    container_name: freeze-thaw-api
+    ports:
+      - "8000:8000"
+    environment:
+      # 全局默认冻结/解冻阈值（°C），可在登记样本时按样本覆盖
+      FREEZE_THRESHOLD: "-20"
+      THAW_THRESHOLD: "0"
+      INITIAL_STATE: "thawed"
+      # 允许的温度范围（越界即告警），留空表示不限制
+      MIN_ALLOWED_TEMP: "-80"
+      MAX_ALLOWED_TEMP: "10"
+      # 每个样本允许的完整冻融循环上限，留空表示不限制
+      MAX_FREEZE_THAW_CYCLES: "5"
+      DATABASE_PATH: "/data/freeze_thaw.db"
+    volumes:
+      - freeze-thaw-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).status==200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  freeze-thaw-data:

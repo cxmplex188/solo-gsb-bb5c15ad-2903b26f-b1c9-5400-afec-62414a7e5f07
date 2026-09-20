@@ -1,0 +1,10 @@
+{
+  "id": "SAMPLE-001",
+  "name": "血清样本 A",
+  "freeze_threshold": -20.0,
+  "thaw_threshold": 0.0,
+  "initial_state": "thawed",
+  "min_allowed_temp": -80.0,
+  "max_allowed_temp": 10.0,
+  "max_freeze_thaw_cycles": 3
+}
